@@ -10,6 +10,8 @@ namespace assistantServer.data
     public class AssistantDbContext : DbContext {
        
         public DbSet<User> Users { get; set; }
+
+        public AssistantDbContext() { }
         public AssistantDbContext(DbContextOptions<AssistantDbContext> contextOptions) : base(contextOptions) { }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
