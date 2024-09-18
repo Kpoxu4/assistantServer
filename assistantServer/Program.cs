@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using assistantServer.Servise;
+using assistantServer.Mapper.Interface;
+using assistantServer.Mapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,6 +46,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IJwtTokenServise, JwtTokenServise>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+builder.Services.AddScoped<IUserMapper, UserMapper>();
+
 
 // Настройка подключения к базе данных
 builder.Services.AddDbContext<AssistantDbContext>(options =>

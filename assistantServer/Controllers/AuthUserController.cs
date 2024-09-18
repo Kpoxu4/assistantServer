@@ -1,5 +1,6 @@
 ﻿using assistantServer.data.model;
 using assistantServer.data.repository.Interface;
+using assistantServer.Mapper.Interface;
 using assistantServer.Models;
 using assistantServer.Servise.Interface;
 using Microsoft.AspNetCore.Authentication;
@@ -23,14 +24,17 @@ namespace assistantServer.Controllers
         private readonly IUserRepository  _userRepository;       
         private readonly IJwtTokenServise _jwtTokenServise;
         private readonly IPasswordHasher _passwordHasher;
-       
+        private readonly IUserMapper _userMapper;
+
         public AuthUserController(IUserRepository userRepository,                                   
                                   IJwtTokenServise jwtTokenServise,
-                                  IPasswordHasher passwordHasher)
+                                  IPasswordHasher passwordHasher,
+                                  IUserMapper userMapper)
         {
             _userRepository = userRepository;            
             _jwtTokenServise = jwtTokenServise;
             _passwordHasher = passwordHasher;
+            _userMapper = userMapper;
         }
 
         [HttpPost("login")]
@@ -44,7 +48,7 @@ namespace assistantServer.Controllers
 
             if (!isLogin)
             {
-                return Unauthorized();
+                return Unauthorized(new { error = "Вы не зарегистрированы." });
             }
 
             var userFromDb = _userRepository.GetUser(user.Username!);                        
@@ -60,19 +64,15 @@ namespace assistantServer.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequest(new { error = "Неверные данные. Пожалуйста, проверьте введенные значения." });
-            }            
+            }
 
             if (_userRepository.CheckUserName(model.UserName))
             {
                 return BadRequest(new { error = "Надо придумать другое имя" });
             }
-            var dbUser = new User
-            {
-                Name = model.UserName,
-                Password = _passwordHasher.GeneratePassword(model.Password),
-                Phone = model.PhoneNumber,
-            };
 
+            model.Password = _passwordHasher.GeneratePassword(model.Password);
+            var dbUser = _userMapper.DbUser(model);      
             _userRepository.Create(dbUser);            
 
             return Ok();
