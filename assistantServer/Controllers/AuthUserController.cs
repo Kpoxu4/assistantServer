@@ -42,24 +42,31 @@ namespace assistantServer.Controllers
         {
             if (user.Username == null || user.Password == null)
             {
+
                 return BadRequest(new { error = "Поля должны быть заполнены" });
             }
-            var isLogin = _passwordHasher.VerifyPassword(_passwordHasher.GeneratePassword(user.Password), user.Password);
+            var userDb = _userRepository.GetUser(user.Username);
+
+            if (userDb == null)
+            {
+                return Unauthorized(new { error = "Такого имени не существует." });
+
+            }
+            var isLogin = _passwordHasher.VerifyPassword(user.Password, userDb.Password);
 
             if (!isLogin)
             {
-                return Unauthorized(new { error = "Вы не зарегистрированы." });
+                return Unauthorized(new { error = "Пароль не верный." });
             }
-
-            var userFromDb = _userRepository.GetUser(user.Username!);                        
-            var tokenString = _jwtTokenServise.GenerateJwtToken(userFromDb);
-            _userRepository.AddTokenForUser(userFromDb, tokenString);   
+                                               
+            var tokenString = _jwtTokenServise.GenerateJwtToken(userDb);
+            _userRepository.AddTokenForUser(userDb, tokenString);   
 
             return Ok(new { token = tokenString });
         }
 
         [HttpPost("registration")]
-        public IActionResult Registration(RegistrationViewModel model)
+        public IActionResult Registration([FromBody]RegistrationViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -71,7 +78,8 @@ namespace assistantServer.Controllers
                 return BadRequest(new { error = "Надо придумать другое имя" });
             }
 
-            model.Password = _passwordHasher.GeneratePassword(model.Password);
+            model.Password = _passwordHasher.GeneratePassword(model.Password);            
+
             var dbUser = _userMapper.DbUser(model);      
             _userRepository.Create(dbUser);            
 

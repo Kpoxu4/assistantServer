@@ -33,14 +33,14 @@ builder.Services.AddAuthentication(options =>
 })
 .AddCookie(options =>
 {
-    // Настройки для Cookie-аутентификации
+    // Cookie-аутентификации
     options.LoginPath = "/AuthUser/Login";
 });
 
 // Авторизация
 builder.Services.AddAuthorization();
 
-// Добавляем контроллеры и другие сервисы
+// контроллеры и другие сервисы
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -64,7 +64,7 @@ builder.Services.AddCors(o =>
     {
         p.AllowAnyHeader();
         p.AllowAnyMethod();
-        p.SetIsOriginAllowed(x => true); // Разрешаем любой origin (по надобности можно ограничить)
+        p.SetIsOriginAllowed(x => true); // Разрешаем любой origin (потом  можно ограничить)
         p.AllowCredentials(); // Разрешаем передавать cookies или токены
     });
 });

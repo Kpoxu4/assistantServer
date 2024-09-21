@@ -7,5 +7,6 @@ namespace assistantServer.data.repository.Interface
         User GetUser(string name);
         void AddTokenForUser(User user, string token);
         bool CheckUserName(string userName);
+
     }
 }

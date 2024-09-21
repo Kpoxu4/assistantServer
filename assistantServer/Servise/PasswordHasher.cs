@@ -11,8 +11,9 @@ namespace assistantServer.Servise
             return BCrypt.Net.BCrypt.HashPassword(password, SALT_WORK_FACTOR);
         }
 
-        public bool VerifyPassword(string hashedPassword, string password)
+        public bool VerifyPassword(string password, string hashedPassword)
         {
+            
             return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
         }
     }
