@@ -55,6 +55,7 @@ builder.Services.AddDbContext<AssistantDbContext>(options =>
 
 // Репозитории 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
 
 // Настройка CORS

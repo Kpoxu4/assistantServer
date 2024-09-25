@@ -9,6 +9,7 @@ namespace assistantServer.Servise
 {
     public class JwtTokenServise : IJwtTokenServise
     {
+        private const int TOKINE_ACTION = 24;
         public string GenerateJwtToken(User userFromDb)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -21,11 +22,12 @@ namespace assistantServer.Servise
                     new Claim("name", userFromDb.Name),
                     new Claim("phone", userFromDb.Phone)
                     }),
-                Expires = DateTime.UtcNow.AddHours(1),
+                Expires = DateTime.UtcNow.AddHours(TOKINE_ACTION),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
-            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var token = tokenHandler.CreateToken(tokenDescriptor);       
+                      
             return tokenHandler.WriteToken(token);
         }
         public bool CheckTimeToken(string token)
@@ -38,8 +40,8 @@ namespace assistantServer.Servise
                 return false;
             }
 
-            var expirationTime = DateTimeOffset.FromUnixTimeSeconds((long)exp).UtcDateTime;
-            return expirationTime > DateTime.Now;            
+            var expirationTime = DateTimeOffset.FromUnixTimeSeconds((long)exp).UtcDateTime;           
+            return expirationTime > DateTime.UtcNow;            
         }
     }
 }

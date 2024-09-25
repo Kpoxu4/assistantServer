@@ -10,6 +10,7 @@ namespace assistantServer.data
     public class AssistantDbContext : DbContext {
        
         public DbSet<User> Users { get; set; }
+        public DbSet<Order> Orders { get; set; }
 
         public AssistantDbContext() { }
         public AssistantDbContext(DbContextOptions<AssistantDbContext> contextOptions) : base(contextOptions) { }
@@ -24,6 +25,15 @@ namespace assistantServer.data
                 var connectionString = configuration.GetConnectionString("AssistantDbContext");              
                 optionsBuilder.UseNpgsql(connectionString);
             }
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Orders)
+                .WithOne(o => o.User)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

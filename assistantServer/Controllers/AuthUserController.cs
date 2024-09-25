@@ -84,7 +84,14 @@ namespace assistantServer.Controllers
             _userRepository.Create(dbUser);            
 
             return Ok();
-        }        
+        }
+        [HttpGet("checkTokenValidity")]
+        public IActionResult CheckTokenValidity([FromQuery] string token)
+        {
+            
+            bool isValid = _jwtTokenServise.CheckTimeToken(token);
+            return Ok(new { valid = isValid });
+        }
     }
 }
 
