@@ -15,8 +15,8 @@ namespace assistantServer.data.model
         public int ProductPrice { get; set; }
         public int AdvancePayment { get; set; }
         public int ProductionTime { get; set; }
-        public DateTime CreateDate { get; set; }
-        public DateTime FinishDate { get; set; }
+        public string  CreateDate { get; set; }
+        public string FinishDate { get; set; }
         public bool IsOverdue { get; set; }
         public virtual User User { get; set; }
     }

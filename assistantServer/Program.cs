@@ -9,6 +9,8 @@ using System.Text;
 using assistantServer.Servise;
 using assistantServer.Mapper.Interface;
 using assistantServer.Mapper;
+using assistantServer.builder.Interface;
+using assistantServer.builder;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,6 +49,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IJwtTokenServise, JwtTokenServise>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<IUserMapper, UserMapper>();
+builder.Services.AddScoped<IOrderBuilder, OrderBuilder>();
 
 
 // Настройка подключения к базе данных
